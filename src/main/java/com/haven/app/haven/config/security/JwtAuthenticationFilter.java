@@ -100,8 +100,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (AuthenticationException e){
             handleAuthenticationException(response, e.getMessage());
         }
-        catch (Exception e) {
-            handleAuthenticationException(response, "Authentication Failed");
-        }
+
     }
 }

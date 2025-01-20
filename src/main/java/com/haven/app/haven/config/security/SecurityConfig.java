@@ -1,5 +1,8 @@
 package com.haven.app.haven.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.haven.app.haven.dto.response.ErrorResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +55,20 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+                            ErrorResponse errorResponse = ErrorResponse.builder()
+                                    .message("Endpoint not found")
+                                    .error("not found")
+                                    .build();
+
+                            ObjectMapper mapper = new ObjectMapper();
+                            response.getOutputStream().println(mapper.writeValueAsString(errorResponse));
+                        })
+                )
                 .build();
     }
 
