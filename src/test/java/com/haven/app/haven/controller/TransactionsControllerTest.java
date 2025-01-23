@@ -48,7 +48,6 @@ class TransactionsControllerTest {
 
     @Test
     void createTransaction() throws Exception {
-        // Prepare request
         TicketRequest ticketRequest = TicketRequest.builder()
                 .hikerName("Hiker")
                 .address("Address")
@@ -62,7 +61,6 @@ class TransactionsControllerTest {
                 .tickets(ticketRequests)
                 .build();
 
-        // Prepare response
         TransactionsResponse transactionsResponse = TransactionsResponse.builder()
                 .id("1")
                 .user(LoginResponse.builder().id("user1").build())
@@ -72,11 +70,9 @@ class TransactionsControllerTest {
                 .totalAmount(1000.0)
                 .build();
 
-        // Mock service method
         when(transactionsService.createTransaction(any(TransactionsRequest.class)))
                 .thenReturn(transactionsResponse);
 
-        // Perform POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(transactionsRequest)))
@@ -85,7 +81,6 @@ class TransactionsControllerTest {
 
     @Test
     void getAllTransactions() throws Exception {
-        // Prepare test data
         TransactionsResponse transactionsResponse = TransactionsResponse.builder()
                 .id("1")
                 .totalAmount(1000.0)
@@ -95,11 +90,9 @@ class TransactionsControllerTest {
         List<TransactionsResponse> transactionsList = Collections.singletonList(transactionsResponse);
         Page<TransactionsResponse> transactionsPage = new PageImpl<>(transactionsList);
 
-        // Mock service method
         when(transactionsService.getTransactions(any(SearchRequestTransaction.class)))
                 .thenReturn(transactionsPage);
 
-        // Perform GET request with pagination
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactions")
                         .param("page", "1")
                         .param("size", "10")
@@ -109,25 +102,21 @@ class TransactionsControllerTest {
 
     @Test
     void getTransactionById() throws Exception {
-        // Prepare response
         TransactionsResponse transactionsResponse = TransactionsResponse.builder()
                 .id("1")
                 .totalAmount(1000.0)
                 .status("PENDING")
                 .build();
 
-        // Mock service method
         when(transactionsService.getTransactionById("1"))
                 .thenReturn(transactionsResponse);
 
-        // Perform GET request
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactions/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void getTransactionsByUserId() throws Exception {
-        // Prepare test data
         TransactionsResponse transactionsResponse = TransactionsResponse.builder()
                 .id("1")
                 .totalAmount(1000.0)
@@ -137,11 +126,9 @@ class TransactionsControllerTest {
         List<TransactionsResponse> transactionsList = Collections.singletonList(transactionsResponse);
         Page<TransactionsResponse> transactionsPage = new PageImpl<>(transactionsList);
 
-        // Mock service method
         when(transactionsService.getTransactionByUser(anyInt(), anyInt()))
                 .thenReturn(transactionsPage);
 
-        // Perform GET request with pagination
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactions/user")
                         .param("page", "1")
                         .param("size", "10")
@@ -151,23 +138,19 @@ class TransactionsControllerTest {
 
     @Test
     void updateTransactionStatus() throws Exception {
-        // Prepare request body
         TransactionsStatusRequest statusRequest = TransactionsStatusRequest.builder()
                 .status("COMPLETED")
                 .build();
 
-        // Prepare response
         TransactionsResponse transactionsResponse = TransactionsResponse.builder()
                 .id("1")
                 .totalAmount(1000.0)
                 .status("COMPLETED")
                 .build();
 
-        // Mock service method
         when(transactionsService.updateTransactionStatus(eq("1"), any(TransactionsStatusRequest.class)))
                 .thenReturn(transactionsResponse);
 
-        // Perform PATCH request
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/transactions/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(statusRequest)))
@@ -176,10 +159,8 @@ class TransactionsControllerTest {
 
     @Test
     void deviceAssignment() throws Exception {
-        // Mock service method
         doNothing().when(transactionsService).deviceAssignment("1", "device1");
 
-        // Perform PATCH request
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/transactions/1/device/device1"))
                 .andExpect(status().isOk());
     }

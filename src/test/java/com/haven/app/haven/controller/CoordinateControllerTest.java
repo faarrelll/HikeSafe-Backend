@@ -41,24 +41,20 @@ class CoordinateControllerTest {
 
     @Test
     void addCoordinate() throws Exception {
-        // Prepare request
         CoordinateRequest coordinateRequest = CoordinateRequest.builder()
                 .latitude("-6.2088")
                 .longitude("106.8456")
                 .build();
 
-        // Prepare response
         CoordinateResponse coordinateResponse = CoordinateResponse.builder()
                 .id("1")
                 .latitude("-6.2088")
                 .longitude("106.8456")
                 .build();
 
-        // Mock service method
         when(service.addCoordinate(any(CoordinateRequest.class)))
                 .thenReturn(coordinateResponse);
 
-        // Perform POST request
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/coordinate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(coordinateRequest)))
@@ -67,7 +63,6 @@ class CoordinateControllerTest {
 
     @Test
     void getCoordinate() throws Exception {
-        // Prepare coordinate responses
         CoordinateResponse coordinateResponse = CoordinateResponse.builder()
                 .id("1")
                 .latitude("-6.2088")
@@ -77,11 +72,9 @@ class CoordinateControllerTest {
         List<CoordinateResponse> coordinatesList = Collections.singletonList(coordinateResponse);
         Page<CoordinateResponse> coordinatesPage = new PageImpl<>(coordinatesList);
 
-        // Mock service method
         when(service.getCoordinate(eq("transaction1"), eq(1), eq(10)))
                 .thenReturn(coordinatesPage);
 
-        // Perform GET request
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/coordinate/transaction1")
                         .param("page", "1")
                         .param("size", "10"))

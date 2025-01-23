@@ -70,7 +70,6 @@ class TrackerDevicesControllerTest {
 
     @Test
     void getAllTrackerDevices() throws Exception {
-        // Prepare test data
         TrackerDevicesResponse trackerDevicesResponse = TrackerDevicesResponse.builder()
                 .id("1")
                 .SerialNumber("T1")
@@ -80,11 +79,9 @@ class TrackerDevicesControllerTest {
         List<TrackerDevicesResponse> trackerDevicesResponseList = Collections.singletonList(trackerDevicesResponse);
         Page<TrackerDevicesResponse> trackerDevicesResponsePage = new PageImpl<>(trackerDevicesResponseList);
 
-        // Mock service method
         when(trackerDevicesService.getTrackerDevices(any(SearchTrackerDeviceRequest.class)))
                 .thenReturn(trackerDevicesResponsePage);
 
-        // Perform GET request with pagination
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/tracker-devices")
                         .param("page", "1")
                         .param("size", "10")
@@ -94,41 +91,37 @@ class TrackerDevicesControllerTest {
 
     @Test
     void getTrackerDevices() throws Exception {
-        // Prepare test data
         TrackerDevicesResponse trackerDevicesResponse = TrackerDevicesResponse.builder()
                 .id("1")
                 .SerialNumber("T1")
                 .status("Not_Used")
                 .build();
 
-        // Mock service method
         when(trackerDevicesService.getTrackerById("1"))
                 .thenReturn(trackerDevicesResponse);
 
-        // Perform GET request for specific tracker
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/tracker-devices/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void updateTrackerDevices() throws Exception {
-        // Prepare request body
+
         TrackerDevicesRequest trackerDevicesRequest = TrackerDevicesRequest.builder()
                 .serialNumber("T1_UPDATED")
                 .build();
 
-        // Prepare response
+
         TrackerDevicesResponse trackerDevicesResponse = TrackerDevicesResponse.builder()
                 .id("1")
                 .SerialNumber("T1_UPDATED")
                 .status("Not_Used")
                 .build();
 
-        // Mock service method
+
         when(trackerDevicesService.updateTracker(eq("1"), any(TrackerDevicesRequest.class)))
                 .thenReturn(trackerDevicesResponse);
 
-        // Perform PATCH request
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/tracker-devices/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(trackerDevicesRequest)))
@@ -137,23 +130,19 @@ class TrackerDevicesControllerTest {
 
     @Test
     void updateStatusTracker() throws Exception {
-        // Prepare request body
         TrackerDevicesStatusRequest trackerDevicesStatusRequest = TrackerDevicesStatusRequest.builder()
                 .status("Used")
                 .build();
 
-        // Prepare response
         TrackerDevicesResponse trackerDevicesResponse = TrackerDevicesResponse.builder()
                 .id("1")
                 .SerialNumber("T1")
                 .status("Used")
                 .build();
 
-        // Mock service method
         when(trackerDevicesService.updateStatus(eq("1"), any(TrackerDevicesStatusRequest.class)))
                 .thenReturn(trackerDevicesResponse);
 
-        // Perform PATCH request for status update
         mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/tracker-devices/1/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(trackerDevicesStatusRequest)))
@@ -162,10 +151,8 @@ class TrackerDevicesControllerTest {
 
     @Test
     void deleteTrackerDevices() throws Exception {
-        // Mock service method (void method, so no return value needed)
         doNothing().when(trackerDevicesService).deleteTracker("1");
 
-        // Perform DELETE request
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/tracker-devices/1"))
                 .andExpect(status().isOk());
     }
