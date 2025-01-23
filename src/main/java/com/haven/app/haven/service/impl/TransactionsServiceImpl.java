@@ -4,6 +4,7 @@ import com.haven.app.haven.constant.PriceType;
 import com.haven.app.haven.constant.TrackerStatus;
 import com.haven.app.haven.constant.TransactionStatus;
 import com.haven.app.haven.dto.request.SearchRequestTransaction;
+import com.haven.app.haven.dto.request.TicketRequest;
 import com.haven.app.haven.dto.request.TransactionsRequest;
 import com.haven.app.haven.dto.request.TransactionsStatusRequest;
 import com.haven.app.haven.dto.response.TransactionsResponse;
@@ -62,7 +63,7 @@ public class TransactionsServiceImpl implements TransactionsService {
 
             List<Tickets> tickets = new ArrayList<>();
             Double totalAmount = 0.0;
-            for(TransactionsRequest.TicketRequest ticketRequest : request.getTickets()) {
+            for(TicketRequest ticketRequest : request.getTickets()) {
                 Prices prices = pricesRepository.findByPriceType(PriceType.getPriceType(ticketRequest.getIdentificationType()));
 
                 if(prices == null) {
